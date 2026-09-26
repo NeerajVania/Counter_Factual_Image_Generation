@@ -1,0 +1,40 @@
+accelerator: 'auto'
+devices: 'auto'
+max_epochs: 100
+seed: null
+training:
+  out_dir: './out/autoencoder'
+  logfile: 'log.txt'
+  criterion: 'VAE_LPIPS'
+  precision: 'bf16-mixed'
+  beta: 0.00025
+  lpips_weight: 0.5
+  checkpoints:
+    save_top_k: 1
+    monitor: 'train total_loss'
+    mode: 'min'
+    filename: '{epoch}'
+data:
+  name: 'EP'
+  path_to_dataset: './data'
+  csv_file: 'INSERTPATH'
+  root_dir: 'INSERTPATH'
+  batch_size: 16
+  num_workers: 8
+  image_resolution: 256
+  use_imbalanced_sampler: False
+  diffusion_transform: False
+optimizer:
+  name: 'Adam'
+  kwargs:
+    lr: 1.0e-5
+scheduler:
+  name: null
+  kwargs: {}
+model:
+  name: 'VAE'
+  base_channels: 128 
+  ch_mult: [1, 2, 4] 
+  num_res_blocks: 2 
+  latent_channels: 4 
+metrics: []

@@ -1,0 +1,35 @@
+accelerator: 'auto'
+devices: 'auto'
+max_epochs: 100
+seed: 42
+training:
+  out_dir: './out/encoder'
+  logfile: 'log.txt'
+  criterion: 'NT_Xent'
+  precision: 'bf16-mixed'
+  checkpoints:
+    save_top_k: 1
+    monitor: 'train total_loss'
+    mode: 'min'
+    filename: '{epoch}'
+data:
+  name: 'EP'
+  path_to_dataset: './data'
+  csv_file: 'INSERTPATH'
+  root_dir: 'INSERTPATH'
+  batch_size: 256
+  num_workers: 8
+  image_resolution: 256
+  use_imbalanced_sampler: False
+  diffusion_transform: False
+  encoder_transform: True
+optimizer:
+  name: 'Adam'
+  kwargs:
+    lr: 1.0e-4
+scheduler:
+  name: null
+  kwargs: {}
+model:
+  name: 'encoder'
+metrics: []
