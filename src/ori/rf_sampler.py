@@ -40,6 +40,7 @@ class RectifiedFlowSampler:
         timestep_scale=999,
         latent_channels=4,
         latent_resolution=64,
+        structure_dim=1024,
     ):
         self.model = model
         self.vae = vae
@@ -48,6 +49,7 @@ class RectifiedFlowSampler:
         self.timestep_scale = timestep_scale
         self.latent_channels = latent_channels
         self.latent_resolution = latent_resolution
+        self.structure_dim = structure_dim
 
     @torch.no_grad()
     def sample(self, labels, structure_embedding=None, device=None):
@@ -122,7 +124,7 @@ class RectifiedFlowSampler:
                 s_in = structure_embedding.repeat(2, 1)
                 structure_mask = torch.zeros(2 * B, dtype=torch.float32, device=device)
             else:
-                s_in = torch.zeros(2 * B, 1024, device=device)
+                s_in = torch.zeros(2 * B, self.structure_dim, device=device)
                 structure_mask = torch.ones(2 * B, dtype=torch.float32, device=device)
 
             v_pred = self.model(z_in, labels_in, t_in, label_mask, s_in, structure_mask)
@@ -137,7 +139,7 @@ class RectifiedFlowSampler:
                 structure_mask = torch.zeros(B, dtype=torch.float32, device=device)
                 s = structure_embedding
             else:
-                s = torch.zeros(B, 1024, device=device)
+                s = torch.zeros(B, self.structure_dim, device=device)
                 structure_mask = torch.ones(B, dtype=torch.float32, device=device)
 
             v = self.model(z, labels, t_scaled, label_mask, s, structure_mask)

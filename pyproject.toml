@@ -1,0 +1,50 @@
+[project]
+name = "ori"
+version = "0.0.1"
+authors = [
+  { name="xxx", email="maintainer@example.com" },
+]
+description = "Ordinal Diffusion Models for Color Fundus Images"
+
+readme = "README.md"
+license = "MIT"
+license-files = ["LICEN[CS]E*"]
+
+requires-python = ">=3.11"
+dependencies = [
+    "lightning>=2.5.1.post0",
+  "matplotlib>=3.8.0",
+  "numpy>=1.26.0",
+    "omegaconf>=2.3.0",
+  "pandas>=2.2.0",
+  "Pillow>=10.0.0",
+    "pyyaml>=6.0.2",
+    "rich>=14.0.0",
+  "scikit-learn>=1.4.0",
+    "tensorboard>=2.19.0",
+  "timm>=1.0.0",
+    "torch==2.6.0",
+    "torchmetrics>=1.7.1",
+    "torchvision>=0.21.0",
+  "tqdm>=4.66.0",
+  "clean-fid>=0.1.35",
+  "lpips>=0.1.4",
+  "fundus-image-toolbox>=0.0.6",
+]
+
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+# Tell setuptools to look in the `src` directory
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[dependency-groups]
+dev = [
+    "black>=25.1.0",
+    "isort>=6.0.1",
+]

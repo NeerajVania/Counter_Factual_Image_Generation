@@ -1,0 +1,37 @@
+accelerator: 'auto'
+devices: 'auto'
+max_epochs: 30
+seed: 42
+training:
+  out_dir: './out/classifier'
+  logfile: 'log.txt'
+  criterion: 'coral'
+  precision: 'bf16-mixed'
+  checkpoints:
+    save_top_k: 1
+    monitor: 'val Kappa'
+    mode: 'max'
+    filename: '{epoch}-{step}'
+data:
+  name: 'EP'
+  path_to_dataset: './data'
+  csv_file: 'INSERTPATH'
+  root_dir: 'INSERTPATH'
+  use_imbalanced_sampler: True
+  diffusion_transform: False
+  encoder_transform: False
+  batch_size: 128
+  num_workers: 8
+  image_resolution: 256
+optimizer:
+  name: 'AdamW'
+  kwargs:
+    lr: 0.001
+    weight_decay: 0.0005
+scheduler:
+  name: CosineAnnealing
+  kwargs: {T_max: 1300, eta_min: 0}
+model:
+  name: 'resnet'
+metrics: ['Accuracy', 'Balanced Accuracy', 'Kappa']
+num_classes: 5

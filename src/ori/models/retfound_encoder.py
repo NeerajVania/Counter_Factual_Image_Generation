@@ -30,7 +30,6 @@ import torch.nn.functional as F
 import timm
 from huggingface_hub import hf_hub_download
 
-
 # Available RETFound-DINOv2 checkpoints on HuggingFace
 RETFOUND_MODELS = {
     "RETFound_dinov2_meh": "YukunZhou/RETFound_dinov2_meh",
@@ -59,7 +58,7 @@ class RETFoundDINOv2Encoder(nn.Module):
         checkpoint_path: Optional explicit path to a ``.pth`` checkpoint file.
             If ``None``, the checkpoint is downloaded from HuggingFace.
     """
-
+            
     # Diffusion pipeline normalization constants (from the EyePacs dataset)
     DIFFUSION_MEAN = [0.3704248070716858, 0.2282254546880722, 0.13915641605854034]
     DIFFUSION_STD = [0.23381589353084564, 0.1512117236852646, 0.09653093665838242]

@@ -1,0 +1,53 @@
+accelerator: 'auto'
+devices: 'auto'
+max_epochs: 35
+seed: null
+training:
+  out_dir: './out'
+  logfile: 'log.txt'
+  criterion: 'MSE'
+  precision: 'bf16-mixed'
+  checkpoints:
+    save_top_k: 1
+    monitor: 'val loss'
+    mode: 'min'
+    filename: '{epoch}'
+data:
+  name: 'EP'
+  path_to_dataset: './data'
+  csv_file: 'INSERTPATH'
+  root_dir: 'INSERTPATH'
+  use_imbalanced_sampler: True
+  diffusion_transform: True
+  encoder_transform: False
+  batch_size: 16
+  num_workers: 8
+  image_resolution: 256
+optimizer:
+  name: 'AdamW'
+  kwargs:
+    lr: 5.0e-5
+scheduler:
+  name: null
+  kwargs: {}
+noise_scheduler:
+  num_timesteps: 1000
+  beta_start: 1e-4
+  beta_end: 0.02
+vae:
+  checkpoint: 'model_weights/VAE/checkpoints/model.pt'
+encoder:
+  name: 'RETFound_dinov2_meh'
+  checkpoint: null
+model:  #https://github.com/facebookresearch/DiT/blob/main/models.py
+  name: 'DiT'
+  patch_size: 2
+  in_channels: 4
+  hidden_size: 1024
+  depth: 24
+  num_heads: 16
+  mlp_ratio: 4.0
+  equi: False
+  learned: True
+  structure: True
+metrics: []

@@ -39,7 +39,7 @@ def main(cfg):
         devices=cfg.devices,
         strategy=(
             pl.strategies.DDPStrategy(find_unused_parameters=True)
-            if len(cfg.devices) > 1
+            if isinstance(cfg.devices, (list, tuple)) and len(cfg.devices) > 1
             else "auto"
         ),
         max_epochs=cfg.max_epochs,

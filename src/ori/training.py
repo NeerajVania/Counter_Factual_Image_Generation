@@ -56,7 +56,7 @@ class LightningWrapper(pl.LightningModule):
 
                 self.vae = self._load_pretrained_vae(cfg)
 
-                if cfg.model.use_structure:
+                if getattr(cfg.model, 'use_structure', getattr(cfg.model, 'structure', True)):
                         self.retfound_encoder = self._load_retfound_encoder(cfg)
                                 
                 self.latent_resolution = cfg.data.image_resolution // 4
@@ -117,7 +117,7 @@ class LightningWrapper(pl.LightningModule):
         def configure_optimizers(self):
                 param_groups = []
 
-                if self.cfg.model.learned_ordinal_input and hasattr(self.model, "v"):
+                if getattr(self.cfg.model, 'learned_ordinal_input', getattr(self.cfg.model, 'learned', True)) and hasattr(self.model, "v"):
                         v_params = [self.model.v.weight]
                         other_params = [param for name, param in self.model.named_parameters() if name != "v.weight"]
 
@@ -167,7 +167,7 @@ class LightningWrapper(pl.LightningModule):
                 with torch.no_grad():
                         mu, log_var = self.vae.encoder(imgs)
                         latents = mu
-                        if self.cfg.model.use_structure:
+                        if getattr(self.cfg.model, 'use_structure', getattr(self.cfg.model, 'structure', True)):
                                 s = self.retfound_encoder(imgs)
                         else:
                                 s = None
@@ -197,7 +197,7 @@ class LightningWrapper(pl.LightningModule):
                         loss = self.criterion(noise_pred, noise, labels, t, ordinal=True)
                 else:
                         loss = self.criterion(noise_pred, noise)
-                if self.cfg.model.learned_ordinal_input:
+                if getattr(self.cfg.model, 'learned_ordinal_input', getattr(self.cfg.model, 'learned', True)):
                         loss += 0.0001 * (1/((self.model.v.weight)**2 + 1e-8)).mean()
 
                 if torch.isnan(loss.cpu()):
@@ -207,12 +207,12 @@ class LightningWrapper(pl.LightningModule):
                 return loss
 
         def on_train_batch_end(self, outputs, batch, batch_idx):
-                if self.cfg.model.learned_ordinal_input:
+                if getattr(self.cfg.model, 'learned_ordinal_input', getattr(self.cfg.model, 'learned', True)):
                         self.v.append(self.model.v.weight.detach().cpu().clone())
 
         def on_train_epoch_end(self) -> None:
                 self.__log_metrics(mode="train")
-                if self.cfg.model.learned_ordinal_input:
+                if getattr(self.cfg.model, 'learned_ordinal_input', getattr(self.cfg.model, 'learned', True)):
                         v_tensor = torch.stack(self.v, dim=0)
                         v_path = os.path.join(self.logger.log_dir, f"v.pt")
                         torch.save(v_tensor.cpu(), v_path)
